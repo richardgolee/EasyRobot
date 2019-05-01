@@ -1,0 +1,6 @@
+F:\github\myrepo\rhino\EasyRobot\EasyRobot\EasyRobot\bin\EasyRobot.dll
+F:\github\myrepo\rhino\EasyRobot\EasyRobot\EasyRobot\bin\EasyRobot.pdb
+F:\github\myrepo\rhino\EasyRobot\EasyRobot\EasyRobot\obj\Debug\EasyRobot.csprojAssemblyReference.cache
+F:\github\myrepo\rhino\EasyRobot\EasyRobot\EasyRobot\obj\Debug\EasyRobot.csproj.CoreCompileInputs.cache
+F:\github\myrepo\rhino\EasyRobot\EasyRobot\EasyRobot\obj\Debug\EasyRobot.dll
+F:\github\myrepo\rhino\EasyRobot\EasyRobot\EasyRobot\obj\Debug\EasyRobot.pdb
