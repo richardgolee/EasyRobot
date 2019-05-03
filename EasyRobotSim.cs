@@ -47,7 +47,6 @@ namespace EasyRobot
         protected override void SolveInstance(IGH_DataAccess DA)
         {
 
-            //Grasshopper.Kernel.Data.GH_Structure<Grasshopper.Kernel.Types.GH_Number> AllAxises = new Grasshopper.Kernel.Data.GH_Structure<Grasshopper.Kernel.Types.GH_Number>;
             List<double> AllAxises = new List<double>();
             List<double> RobotData = new List<double>();
             Mesh ToolMeshModel = new Mesh();
@@ -55,7 +54,6 @@ namespace EasyRobot
             string Path = " ";
             List<string> stringwrite = new List<string>();
 
-            //if (!DA.GetDataTree(0, out AllAxises)) return;
             if (!DA.GetDataList(0, AllAxises)) return;
             if (!DA.GetDataList(1, RobotData)) return;
             if (!DA.GetData(2, ref ToolMeshModel)) return;
