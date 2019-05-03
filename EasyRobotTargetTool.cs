@@ -6,14 +6,14 @@ using Rhino.Geometry;
 
 namespace EasyRobot
 {
-    public class EasyRobotTool : GH_Component
+    public class EasyRobotTargetTool : GH_Component
     {
         /// <summary>
-        /// Initializes a new instance of the EasyRobotTool class.
+        /// Initializes a new instance of the EasyRobotTargetTool class.
         /// </summary>
-        public EasyRobotTool()
-          : base("FlatTool", "FlaT",
-              "EasyRobotFlatTool",
+        public EasyRobotTargetTool()
+          : base("FreeTool", "TarT",
+              "EasyRobotTargetTool",
               "EasyRobot", "Tool")
         {
         }
@@ -23,9 +23,7 @@ namespace EasyRobot
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddNumberParameter("Toolx", "Tx", "Toolx", GH_ParamAccess.item, 230);
-            pManager.AddNumberParameter("Tooly", "Ty", "Toolx", GH_ParamAccess.item, 0);
-            pManager.AddNumberParameter("Toolz", "Tz", "Toolx", GH_ParamAccess.item, 20);
+            pManager.AddPlaneParameter("Toolplane", "Tp", "Toolplane", GH_ParamAccess.item, Plane.WorldXY);
         }
 
         /// <summary>
@@ -33,8 +31,7 @@ namespace EasyRobot
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddNumberParameter("ToolData", "TD", "ToolData", GH_ParamAccess.list);
-            pManager.AddTransformParameter("ToolTrans", "TT", "ToolTran", GH_ParamAccess.item);
+            pManager.AddTransformParameter("ToolTransform", "Tt", "ToolTransform", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -43,22 +40,11 @@ namespace EasyRobot
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            double Tx = 0;
-            double Ty = 0;
-            double Tz = 0;
-            List<double> ToolData = new List<double>();
+            Plane origin = Plane.WorldXY;
+            Plane Target = Plane.WorldXY;
+            if (!DA.GetData(0, ref Target)) return;
 
-            if (!DA.GetData(0, ref Tx)) return;
-            if (!DA.GetData(1, ref Ty)) return;
-            if (!DA.GetData(2, ref Tz)) return;
-
-            ToolData.Add(Tx);
-            ToolData.Add(Ty);
-            ToolData.Add(Tz);
-
-            DA.SetDataList(0, ToolData);
-
-            Transform tool = new Transform();
+            Transform TargetTransform = Transform.ChangeBasis(Target, origin);
         }
 
         /// <summary>
@@ -79,7 +65,7 @@ namespace EasyRobot
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("b35e98f2-4542-4df6-95cf-af1c799ad3f3"); }
+            get { return new Guid("eff042fe-6966-4527-84d8-d3ca478ece45"); }
         }
     }
 }

@@ -4,3 +4,5 @@ F:\github\myrepo\rhino\EasyRobot\EasyRobot\EasyRobot\obj\Debug\EasyRobot.csprojA
 F:\github\myrepo\rhino\EasyRobot\EasyRobot\EasyRobot\obj\Debug\EasyRobot.csproj.CoreCompileInputs.cache
 F:\github\myrepo\rhino\EasyRobot\EasyRobot\EasyRobot\obj\Debug\EasyRobot.dll
 F:\github\myrepo\rhino\EasyRobot\EasyRobot\EasyRobot\obj\Debug\EasyRobot.pdb
+F:\github\myrepo\rhino\EasyRobot\EasyRobot\EasyRobot\obj\Debug\EasyRobot.Properties.Resources.resources
+F:\github\myrepo\rhino\EasyRobot\EasyRobot\EasyRobot\obj\Debug\EasyRobot.csproj.GenerateResource.cache

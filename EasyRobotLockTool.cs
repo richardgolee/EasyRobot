@@ -6,14 +6,14 @@ using Rhino.Geometry;
 
 namespace EasyRobot
 {
-    public class EasyRobotTool : GH_Component
+    public class EasyRobotLockTool : GH_Component
     {
         /// <summary>
-        /// Initializes a new instance of the EasyRobotTool class.
+        /// Initializes a new instance of the EasyRobotLockTool class.
         /// </summary>
-        public EasyRobotTool()
-          : base("FlatTool", "FlaT",
-              "EasyRobotFlatTool",
+        public EasyRobotLockTool()
+          : base("LockTool", "LocT",
+              "EasyRobotLockTool",
               "EasyRobot", "Tool")
         {
         }
@@ -24,7 +24,6 @@ namespace EasyRobot
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
             pManager.AddNumberParameter("Toolx", "Tx", "Toolx", GH_ParamAccess.item, 230);
-            pManager.AddNumberParameter("Tooly", "Ty", "Toolx", GH_ParamAccess.item, 0);
             pManager.AddNumberParameter("Toolz", "Tz", "Toolx", GH_ParamAccess.item, 20);
         }
 
@@ -34,7 +33,6 @@ namespace EasyRobot
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
             pManager.AddNumberParameter("ToolData", "TD", "ToolData", GH_ParamAccess.list);
-            pManager.AddTransformParameter("ToolTrans", "TT", "ToolTran", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -49,16 +47,13 @@ namespace EasyRobot
             List<double> ToolData = new List<double>();
 
             if (!DA.GetData(0, ref Tx)) return;
-            if (!DA.GetData(1, ref Ty)) return;
-            if (!DA.GetData(2, ref Tz)) return;
+            if (!DA.GetData(1, ref Tz)) return;
 
             ToolData.Add(Tx);
             ToolData.Add(Ty);
             ToolData.Add(Tz);
 
             DA.SetDataList(0, ToolData);
-
-            Transform tool = new Transform();
         }
 
         /// <summary>
@@ -79,7 +74,7 @@ namespace EasyRobot
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("b35e98f2-4542-4df6-95cf-af1c799ad3f3"); }
+            get { return new Guid("30669a92-d1b6-4e63-8662-407bf76df517"); }
         }
     }
 }

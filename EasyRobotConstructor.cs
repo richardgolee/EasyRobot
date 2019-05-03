@@ -12,9 +12,9 @@ namespace EasyRobot
         /// Initializes a new instance of the MyComponent1 class.
         /// </summary>
         public EasyRobotConstructor()
-          : base("Robot", "ERC",
+          : base("RobotKR6R900", "KR6R900   ",
               "EasyRobotConstructor",
-              "EasyRobot", "EasyRobotConstructor")
+              "EasyRobot", "Robot")
         {
         }
 
@@ -26,9 +26,9 @@ namespace EasyRobot
             pManager.AddNumberParameter("Axis2PointHorizontalOffset", "A2Z", "Axis2PointHorizontalOffset", GH_ParamAccess.item,400);
             pManager.AddNumberParameter("Axis2PointVerticalOffset", "A2X", "Axis2PointVerticalOffset", GH_ParamAccess.item,25);
             pManager.AddNumberParameter("DistanceBetweenAxis23", "D23", "DistanceBetweenAxis2AndAxis3", GH_ParamAccess.item,455);
-            pManager.AddNumberParameter("DistanceBetweenAxis35", "D35", "DistanceBetweenAxis3AndAxis5", GH_ParamAccess.item,421.46);
-            pManager.AddNumberParameter("DistanceBetweenAxis56", "D56", "DistanceBetweenAxis5AndAxis6", GH_ParamAccess.item,80);
-            pManager.AddNumberParameter("DeltaAngle", "DA", "DeltaAngleOfAxis35", GH_ParamAccess.item,4.76);
+            pManager.AddNumberParameter("DistanceBetweenAxis34", "D34", "DistanceBetweenAxis3AndAxis4", GH_ParamAccess.item,25);
+            pManager.AddNumberParameter("DistanceBetweenAxis45", "D45", "DistanceBetweenAxis4AndAxis5", GH_ParamAccess.item,420);
+            pManager.AddNumberParameter("DistanceBetweenAxis56", "D56", "DistanceBetweenAxis5AndAxis6", GH_ParamAccess.item,90);
         }
 
         /// <summary>
@@ -48,24 +48,24 @@ namespace EasyRobot
             double a2z = 0;
             double a2x = 0;
             double d23 = 0;
-            double d35 = 0;
+            double d34 = 0;
+            double d45 = 0;
             double d56 = 0;
-            double da = 0;
             List<double> RobotData= new List<double>();
 
             if (!DA.GetData(0, ref a2z)) return;
             if (!DA.GetData(1, ref a2x)) return;
             if (!DA.GetData(2, ref d23)) return;
-            if (!DA.GetData(3, ref d35)) return;
-            if (!DA.GetData(4, ref d56)) return;
-            if (!DA.GetData(5, ref da)) return;
+            if (!DA.GetData(3, ref d34)) return;
+            if (!DA.GetData(4, ref d45)) return;
+            if (!DA.GetData(5, ref d56)) return;
 
             RobotData.Add(a2z);
             RobotData.Add(a2x);
             RobotData.Add(d23);
-            RobotData.Add(d35);
+            RobotData.Add(d34);
+            RobotData.Add(d45);
             RobotData.Add(d56);
-            RobotData.Add(da);
 
             DA.SetDataList(0, RobotData);
 

@@ -6,15 +6,15 @@ using Rhino.Geometry;
 
 namespace EasyRobot
 {
-    public class EasyRobotFlat : GH_Component
+    public class EasyRobotSim : GH_Component
     {
         /// <summary>
         /// Initializes a new instance of the MyComponent1 class.
         /// </summary>
-        public EasyRobotFlat()
-          : base("FlatCore", "FlaC",
-              "EasyRobotFlatCore",
-              "EasyRobot", "Core")
+        public EasyRobotSim()
+          : base("MoveSimulation", "MovS",
+              "RobotMoveSimulation",
+              "EasyRobot", "Simulation")
         {
         }
 
@@ -23,12 +23,11 @@ namespace EasyRobot
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddPointParameter("TargetPoints", "TPs", "targetpoints", GH_ParamAccess.list);
+            pManager.AddNumberParameter("6AxisAngles","6Axis", "Data for Simulation", GH_ParamAccess.list);
             pManager.AddNumberParameter("Robot", "Robot", "RobotData", GH_ParamAccess.list);
-            pManager.AddNumberParameter("Tool", "Tool", "ToolData", GH_ParamAccess.list);
+            pManager.AddMeshParameter("ToolModel", "Tool", "Tool Mesh Model", GH_ParamAccess.item);
+            pManager.AddNumberParameter("SimRatio", "Time", "Time ratio of Simulation", GH_ParamAccess.item, 0);
             pManager.AddTextParameter("Path", "Path", "Path", GH_ParamAccess.item);
-            pManager.AddNumberParameter("Simulation", "Sim", "Simulation", GH_ParamAccess.item,0);
-
         }
 
         /// <summary>
@@ -47,18 +46,21 @@ namespace EasyRobot
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            List<Point3d> TarPts = new List<Point3d>();
-            List<double> RobotData = new List<double>();
-            List<double> ToolData = new List<double>();
-            List<string> stringwrite = new List<string>();
-            string Path = " ";
-            double sim = 0;
 
-            if (!DA.GetDataList(0, TarPts)) return;
+            //Grasshopper.Kernel.Data.GH_Structure<Grasshopper.Kernel.Types.GH_Number> AllAxises = new Grasshopper.Kernel.Data.GH_Structure<Grasshopper.Kernel.Types.GH_Number>;
+            List<double> AllAxises = new List<double>();
+            List<double> RobotData = new List<double>();
+            Mesh ToolMeshModel = new Mesh();
+            double SimRatio = 0;
+            string Path = " ";
+            List<string> stringwrite = new List<string>();
+
+            //if (!DA.GetDataTree(0, out AllAxises)) return;
+            if (!DA.GetDataList(0, AllAxises)) return;
             if (!DA.GetDataList(1, RobotData)) return;
-            if (!DA.GetDataList(2, ToolData)) return;
-            if (!DA.GetData(3, ref Path)) return;
-            if (!DA.GetData(4, ref sim)) return;
+            if (!DA.GetData(2, ref ToolMeshModel)) return;
+            if (!DA.GetData(3, ref SimRatio)) return;
+            if (!DA.GetData(4, ref Path)) return;
 
             double a2z = RobotData[0];
             double a2x = RobotData[1];
@@ -70,92 +72,39 @@ namespace EasyRobot
             double d35 = Math.Pow(d34 * d34 + d45 * d45, 0.5);
             double da = 180 * Math.Atan(d34 / d45) / Math.PI;
 
-            double Tx = ToolData[0];
-            double Ty = ToolData[1];
-            double Tz = ToolData[2];
+            List<double[]> AllAxisesD = new List<double[]>();
+            for(int i =0; i < AllAxises.Count/6; i++)
+            {
+                double[] singlePair = new double[6];
+                for(int j = 0; j < 6; j++)
+                {
+                    int indexOfSingle = i * 6 + j;
+                    singlePair[j] = AllAxises[indexOfSingle];
+                }
+                AllAxisesD.Add(singlePair);
 
-            double Axis1 = 0;
-            double Axis2 = 0;
-            double Axis3 = 0;
-            double Axis4 = 0;
-            double Axis5 = 0;
-            double Axis6 = 0;
-
-            List<double[]> AllAxises= new List<double[]>();
-            
-
-
-            for (int i = 0; i < TarPts.Count; i++) {
-                Point3d pt = TarPts[i];
-                double px = pt.X;
-                double py = pt.Y;
-                double pz = pt.Z;
-
-                double CalHorizontalLength = Math.Pow((px * px + py * py - Ty * Ty), 0.5) - a2x - Tz - d56;
-                Axis1 = (180 * Math.Atan(py / px) / Math.PI) - (180 * Math.Atan(Ty / CalHorizontalLength) / Math.PI);
-
-                double CalVerticalLength = pz - a2z + Tx;
-                double SumLength = Math.Pow((CalHorizontalLength * CalHorizontalLength + CalVerticalLength * CalVerticalLength), 0.5);
-
-                double cosA2i = (d23 * d23 + SumLength * SumLength - d35 * d35) / (2 * d23 * SumLength);
-                double A2i = Math.Acos(cosA2i);
-                double cosA2j = CalHorizontalLength / SumLength;
-                double A2j = Math.Acos(cosA2j);
-                if (CalVerticalLength < 0) { A2j = -A2j; }
-
-                Axis2 = 180*-(A2i + A2j)/Math.PI;
-
-                double cosA3i = (d23 * d23 + d35 * d35 - SumLength * SumLength) / (2 * d23 * d35);
-                double A3i = Math.Acos(cosA3i);
-
-                Axis3 = 180 * (Math.PI - A3i) / Math.PI;
-
-                double cosA5i = (d35 * d35 + SumLength * SumLength - d23 * d23) / (2 * d35 * SumLength);
-                double A5i = Math.Acos(cosA5i);
-
-                Axis5 = 180 * (-(A5i - A2j)) / Math.PI;
-
-                Axis4 = 0;
-                Axis6 = 0;
-
-                Axis3 = Axis3 + da;
-                Axis5 = Axis5 - da;
-
-                Axis1 = Math.Round(Axis1, 3);
-                Axis2 = Math.Round(Axis2, 3);
-                Axis3 = Math.Round(Axis3, 3);
-                Axis4 = Math.Round(Axis4, 3);
-                Axis5 = Math.Round(Axis5, 3);
-                Axis6 = Math.Round(Axis6, 3);
-
-                double[] Axises = new double[6];
-                Axises[0] = Axis1;
-                Axises[1] = Axis2;
-                Axises[2] = Axis3;
-                Axises[3] = Axis4;
-                Axises[4] = Axis5;
-                Axises[5] = Axis6;
-                AllAxises.Add(Axises);
-
-                string A1 = Axis1.ToString();
-                string A2 = Axis2.ToString();
-                string A3 = Axis3.ToString();
-                string A4 = Axis4.ToString();
-                string A5 = Axis5.ToString();
-                string A6 = Axis6.ToString();
-                string output = "PTP {E6AXIS: A1 "+A1+ ", A2 " + A2 + ", A3 " + A3 + ", A4 " + A4 + ", A5 " + A5 + ", A6 " + A6+"}";
+                string A1 = singlePair[0].ToString();
+                string A2 = singlePair[1].ToString();
+                string A3 = singlePair[2].ToString();
+                string A4 = singlePair[3].ToString();
+                string A5 = singlePair[4].ToString();
+                string A6 = singlePair[5].ToString();
+                string output = "PTP {E6AXIS: A1 " + A1 + ", A2 " + A2 + ", A3 " + A3 + ", A4 " + A4 + ", A5 " + A5 + ", A6 " + A6 + "}";
                 stringwrite.Add(output);
+
+                
             }
 
-            int simIndex = (int)((AllAxises.Count-1) * sim);
-            double[] UseAxises = AllAxises[simIndex];
 
-            double UseA1 = UseAxises[0]*Math.PI / 180;
-            double UseA2 = UseAxises[1]*Math.PI / 180;
-            double UseA3 = UseAxises[2]*Math.PI / 180;
-            double UseA4 = UseAxises[3]*Math.PI / 180;
-            double UseA5 = UseAxises[4]*Math.PI / 180;
-            double UseA6 = UseAxises[5]*Math.PI / 180;
+            int simIndex = (int)((AllAxisesD.Count - 1) * SimRatio);
+            double[] UseAxises = AllAxisesD[simIndex];
+
+            double UseA1 = UseAxises[0] * Math.PI / 180;
+            double UseA2 = UseAxises[1] * Math.PI / 180;
+            double UseA3 = UseAxises[2] * Math.PI / 180;
+            double UseA4 = UseAxises[3] * Math.PI / 180;
+            double UseA5 = UseAxises[4] * Math.PI / 180;
+            double UseA6 = UseAxises[5] * Math.PI / 180;
 
             string Axis1ModelString = Properties.Resources.axis1;
             string Axis12ModelString = Properties.Resources.axis12;
@@ -179,10 +128,10 @@ namespace EasyRobot
             Vector3d a1a2 = new Vector3d(a2x, 0, 0);
             Vector3d a1v = new Vector3d(0, 0, 1);
             a1a2.Rotate(UseA1, a1v);
-            Axis12Model.Rotate(UseA1, a1v,a1p1);
+            Axis12Model.Rotate(UseA1, a1v, a1p1);
             //---------------------------
             Point3d a2p = Point3d.Add(a1p2, a1a2);
-            Vector3d a2a3 = new Vector3d(d23,0,0);
+            Vector3d a2a3 = new Vector3d(d23, 0, 0);
             Vector3d a2v = new Vector3d(0, 1, 0);
             a2v.Rotate(UseA1, a1v);
             a2a3.Rotate(UseA1, a1v);
@@ -193,56 +142,94 @@ namespace EasyRobot
             Axis23Model.Rotate(UseA2, a2v, a1p1);
             Axis23Model.Translate(a2pv);
             //--------------------------- 
-            Point3d a3p1 = Point3d.Add(a2p, a2a3);
-            Vector3d a3p1p2 = new Vector3d(0, 0, 35);
-            Vector3d a3a5 = new Vector3d(420, 0, 0);
-            a3p1p2.Rotate(UseA1, a1v);
-            a3p1p2.Rotate(UseA2, a2v);
-            a3p1p2.Rotate(UseA3, a2v);
-            a3a5.Rotate(UseA1, a1v);
-            a3a5.Rotate(UseA2, a2v);
-            a3a5.Rotate(UseA3, a2v);
+            Point3d a3p = Point3d.Add(a2p, a2a3);
+            Vector3d a3a4 = new Vector3d(0, 0, 25);
+            Vector3d a4a5 = new Vector3d(420, 0, 0);
+            a3a4.Rotate(UseA1, a1v);
+            a3a4.Rotate(UseA2, a2v);
+            a3a4.Rotate(UseA3, a2v);
+            a4a5.Rotate(UseA1, a1v);
+            a4a5.Rotate(UseA2, a2v);
+            a4a5.Rotate(UseA3, a2v);
 
-            Vector3d a3p1v = new Vector3d(a3p1);
-            Axis34Model.Rotate(UseA1, a1v,a1p1);
+            Vector3d a3pv = new Vector3d(a3p);
+            Axis34Model.Rotate(UseA1, a1v, a1p1);
             Axis34Model.Rotate(UseA2, a2v, a1p1);
             Axis34Model.Rotate(UseA3, a2v, a1p1);
-            Axis34Model.Translate(a3p1v);
+            Axis34Model.Translate(a3pv);
 
+            Point3d a4p = Point3d.Add(a3p, a3a4);
+            Vector3d a4v = new Vector3d(1,0,0);
+            a4v.Rotate(UseA1, a1v);
+            a4v.Rotate(UseA2, a2v);
+            a4v.Rotate(UseA3, a2v);
+
+            Vector3d a4pv = new Vector3d(a4p);
             Axis45Model.Rotate(UseA1, a1v, a1p1);
             Axis45Model.Rotate(UseA2, a2v, a1p1);
             Axis45Model.Rotate(UseA3, a2v, a1p1);
-            Axis45Model.Translate(a3p1v);
+            Axis45Model.Rotate(UseA4, a4v, a1p1);
+            Axis45Model.Translate(a4pv);
             //---------------------------
-            Point3d a3p2 = Point3d.Add(a3p1, a3p1p2);
-            Point3d a5p = Point3d.Add(a3p2, a3a5);
+            Point3d a5p = Point3d.Add(a4p, a4a5);
             Vector3d a5a6 = new Vector3d(d56, 0, 0);
+            Vector3d a5v = new Vector3d(0, 1, 0);
             a5a6.Rotate(UseA1, a1v);
             a5a6.Rotate(UseA2, a2v);
             a5a6.Rotate(UseA3, a2v);
-            a5a6.Rotate(UseA5, a2v);
-            Point3d a6p = Point3d.Add(a5p, a5a6);
+            a5a6.Rotate(UseA4, a4v);
 
+            a5v.Rotate(UseA1, a1v);
+            a5v.Rotate(UseA4, a4v);
+
+            a5a6.Rotate(UseA5, a5v);
+
+            
             Vector3d a5pv = new Vector3d(a5p);
             Axis56Model.Rotate(UseA1, a1v, a1p1);
             Axis56Model.Rotate(UseA2, a2v, a1p1);
             Axis56Model.Rotate(UseA3, a2v, a1p1);
-            Axis56Model.Rotate(UseA5, a2v, a1p1);
+            Axis56Model.Rotate(UseA4, a4v, a1p1);
+            Axis56Model.Rotate(UseA5, a5v, a1p1);
             Axis56Model.Translate(a5pv);
 
+            Point3d a6p = Point3d.Add(a5p, a5a6);
+            Vector3d a6v = new Vector3d(1, 0, 0);
+            Vector3d a6pv = new Vector3d(a6p);
+            a6v.Rotate(UseA1, a1v);
+            a6v.Rotate(UseA2, a2v);
+            a6v.Rotate(UseA3, a2v);
+            a6v.Rotate(UseA4, a4v);
+            a6v.Rotate(UseA5, a5v);
+            
             Axis6Model.Rotate(UseA1, a1v, a1p1);
             Axis6Model.Rotate(UseA2, a2v, a1p1);
             Axis6Model.Rotate(UseA3, a2v, a1p1);
-            Axis6Model.Rotate(UseA5, a2v, a1p1);
+            Axis6Model.Rotate(UseA4, a4v, a1p1);
+            Axis6Model.Rotate(UseA5, a5v, a1p1);
+            Axis6Model.Rotate(UseA6, a6v, a1p1);
+
             Axis6Model.Translate(a5pv);
+            //---------------------------
+
+
+            ToolMeshModel.Rotate(Math.PI / 2, Vector3d.YAxis, a1p1);
+            ToolMeshModel.Rotate(UseA1, a1v, a1p1);
+            ToolMeshModel.Rotate(UseA2, a2v, a1p1);
+            ToolMeshModel.Rotate(UseA3, a2v, a1p1);
+            ToolMeshModel.Rotate(UseA4, a4v, a1p1);
+            ToolMeshModel.Rotate(UseA5, a5v, a1p1);
+            ToolMeshModel.Rotate(UseA6, a6v, a1p1);
+            ToolMeshModel.Translate(a6pv);
+
             //---------------------------
 
             List<Point3d> AxisesPos = new List<Point3d>();
             AxisesPos.Add(a1p1);
             AxisesPos.Add(a1p2);
             AxisesPos.Add(a2p);
-            AxisesPos.Add(a3p1);
-            AxisesPos.Add(a3p2);
+            AxisesPos.Add(a3p);
+            AxisesPos.Add(a4p);
             AxisesPos.Add(a5p);
             AxisesPos.Add(a6p);
 
@@ -256,13 +243,7 @@ namespace EasyRobot
             RobotArms.Add(Axis45Model);
             RobotArms.Add(Axis56Model);
             RobotArms.Add(Axis6Model);
-
-            /*
-            string arm = Properties.Resources.armby;
-            GeometryBase m = GH_Convert.ByteArrayToCommonObject<GeometryBase>(System.Convert.FromBase64String(arm));
-            Vector3d a6v = new Vector3d(a6p);
-            m.Translate(a6v);
-            */
+            RobotArms.Add(ToolMeshModel);
 
 
             string[] finalExport = stringwrite.ToArray();
@@ -270,6 +251,13 @@ namespace EasyRobot
             DA.SetDataList(0, UseAxises);
             DA.SetData(1, RobotArmLine);
             DA.SetDataList(2, RobotArms);
+
+
+
+
+
+
+
 
         }
 
@@ -281,8 +269,8 @@ namespace EasyRobot
             get
             {
                 //You can add image files to your project resources and access them like this:
-                return Properties.Resources.flat;
-                //return null;
+                // return Resources.IconForThisComponent;
+                return null;
             }
         }
 
@@ -291,7 +279,7 @@ namespace EasyRobot
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("3f6afe52-f0f7-4cb0-89ef-3d5aa3b72815"); }
+            get { return new Guid("14ca8c8b-199b-40c4-a5cc-8b7fdd4ebdb9"); }
         }
     }
 }
