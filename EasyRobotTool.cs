@@ -58,7 +58,7 @@ namespace EasyRobot
 
             DA.SetDataList(0, ToolData);
 
-            Transform tool = new Transform();
+
         }
 
         /// <summary>

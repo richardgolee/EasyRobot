@@ -61,10 +61,11 @@
     <Compile Include="EasyRobotFlat.cs" />
     <Compile Include="EasyRobotConstructor.cs" />
     <Compile Include="EasyRobotLockTool.cs" />
-    <Compile Include="EasyRobotTargetTool.cs" />
     <Compile Include="EasyRobotTool.cs" />
     <Compile Include="EasyRobotLock.cs" />
     <Compile Include="EasyRobotSim.cs" />
+    <Compile Include="KUKA_KR6_R900.cs" />
+    <Compile Include="EasyRobotFree.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

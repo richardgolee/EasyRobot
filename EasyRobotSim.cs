@@ -24,7 +24,8 @@ namespace EasyRobot
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
             pManager.AddNumberParameter("6AxisAngles","6Axis", "Data for Simulation", GH_ParamAccess.list);
-            pManager.AddNumberParameter("Robot", "Robot", "RobotData", GH_ParamAccess.list);
+            pManager.AddNumberParameter("RobotData", "RData", "RobotData", GH_ParamAccess.list);
+            pManager.AddGeometryParameter("RobotModel", "RModel", "RobotMeshModel", GH_ParamAccess.list);
             pManager.AddMeshParameter("ToolModel", "Tool", "Tool Mesh Model", GH_ParamAccess.item);
             pManager.AddNumberParameter("SimRatio", "Time", "Time ratio of Simulation", GH_ParamAccess.item, 0);
             pManager.AddTextParameter("Path", "Path", "Path", GH_ParamAccess.item);
@@ -49,6 +50,7 @@ namespace EasyRobot
 
             List<double> AllAxises = new List<double>();
             List<double> RobotData = new List<double>();
+            List<GeometryBase> RobotModel = new List<GeometryBase>();
             Mesh ToolMeshModel = new Mesh();
             double SimRatio = 0;
             string Path = " ";
@@ -56,9 +58,10 @@ namespace EasyRobot
 
             if (!DA.GetDataList(0, AllAxises)) return;
             if (!DA.GetDataList(1, RobotData)) return;
-            if (!DA.GetData(2, ref ToolMeshModel)) return;
-            if (!DA.GetData(3, ref SimRatio)) return;
-            if (!DA.GetData(4, ref Path)) return;
+            if (!DA.GetDataList(2, RobotModel)) return;
+            if (!DA.GetData(3, ref ToolMeshModel)) return;
+            if (!DA.GetData(4, ref SimRatio)) return;
+            if (!DA.GetData(5, ref Path)) return;
 
             double a2z = RobotData[0];
             double a2x = RobotData[1];
@@ -104,21 +107,13 @@ namespace EasyRobot
             double UseA5 = UseAxises[4] * Math.PI / 180;
             double UseA6 = UseAxises[5] * Math.PI / 180;
 
-            string Axis1ModelString = Properties.Resources.axis1;
-            string Axis12ModelString = Properties.Resources.axis12;
-            string Axis23ModelString = Properties.Resources.axis23;
-            string Axis34ModelString = Properties.Resources.axis34;
-            string Axis45ModelString = Properties.Resources.axis45;
-            string Axis56ModelString = Properties.Resources.axis56;
-            string Axis6ModelString = Properties.Resources.axis6;
-
-            GeometryBase Axis1Model = GH_Convert.ByteArrayToCommonObject<GeometryBase>(System.Convert.FromBase64String(Axis1ModelString));
-            GeometryBase Axis12Model = GH_Convert.ByteArrayToCommonObject<GeometryBase>(System.Convert.FromBase64String(Axis12ModelString));
-            GeometryBase Axis23Model = GH_Convert.ByteArrayToCommonObject<GeometryBase>(System.Convert.FromBase64String(Axis23ModelString));
-            GeometryBase Axis34Model = GH_Convert.ByteArrayToCommonObject<GeometryBase>(System.Convert.FromBase64String(Axis34ModelString));
-            GeometryBase Axis45Model = GH_Convert.ByteArrayToCommonObject<GeometryBase>(System.Convert.FromBase64String(Axis45ModelString));
-            GeometryBase Axis56Model = GH_Convert.ByteArrayToCommonObject<GeometryBase>(System.Convert.FromBase64String(Axis56ModelString));
-            GeometryBase Axis6Model = GH_Convert.ByteArrayToCommonObject<GeometryBase>(System.Convert.FromBase64String(Axis6ModelString));
+            GeometryBase Axis1Model = RobotModel[0];
+            GeometryBase Axis12Model = RobotModel[1];
+            GeometryBase Axis23Model = RobotModel[2];
+            GeometryBase Axis34Model = RobotModel[3];
+            GeometryBase Axis45Model = RobotModel[4];
+            GeometryBase Axis56Model = RobotModel[5];
+            GeometryBase Axis6Model = RobotModel[6];
 
 
             Point3d a1p1 = new Point3d(0, 0, 0);

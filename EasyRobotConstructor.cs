@@ -12,7 +12,7 @@ namespace EasyRobot
         /// Initializes a new instance of the MyComponent1 class.
         /// </summary>
         public EasyRobotConstructor()
-          : base("RobotKR6R900", "KR6R900   ",
+          : base("RobotModify", "RobM",
               "EasyRobotConstructor",
               "EasyRobot", "Robot")
         {

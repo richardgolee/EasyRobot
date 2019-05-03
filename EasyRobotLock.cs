@@ -133,7 +133,7 @@ namespace EasyRobot
 
                 Axis3 = 180 * (Math.PI - A3i) / Math.PI;
 
-                Axis4 = 45;
+                Axis4 = 0;
 
                 Axis3 = Axis3 + da;
                 Axis5 = (0-Axis3-Axis2)+(90-a5World);
