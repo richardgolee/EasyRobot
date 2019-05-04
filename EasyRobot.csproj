@@ -104,6 +104,27 @@
   <ItemGroup>
     <None Include="Resources\axis45.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\flatcore.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\freecore.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\lockcore.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\kr6r900.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\robotmodify.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\simulation.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\easyicon.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -148,7 +148,7 @@ namespace EasyRobot
             get
             {
                 //You can add image files to your project resources and access them like this:
-                return Properties.Resources.flat;
+                return Properties.Resources.flatcore;
                 //return null;
             }
         }
