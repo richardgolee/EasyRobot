@@ -63,15 +63,62 @@ namespace EasyRobot
             if (!DA.GetData(4, ref SimRatio)) return;
             if (!DA.GetData(5, ref Path)) return;
 
-            double a2z = RobotData[0];
-            double a2x = RobotData[1];
+            double d01 = RobotData[0];
+            double d12 = RobotData[1];
             double d23 = RobotData[2];
             double d34 = RobotData[3];
             double d45 = RobotData[4];
             double d56 = RobotData[5];
 
-            double d35 = Math.Pow(d34 * d34 + d45 * d45, 0.5);
-            double da = 180 * Math.Atan(d34 / d45) / Math.PI;
+            string iniA1 = AllAxises[0].ToString();
+            string iniA2 = AllAxises[1].ToString();
+            string iniA3 = AllAxises[2].ToString();
+            string iniA4 = AllAxises[3].ToString();
+            string iniA5 = AllAxises[4].ToString();
+            string iniA6 = AllAxises[5].ToString();
+
+            int RobotBase = 1;
+            int RobotTool = 1;
+            int RobotVel = 15;
+            int RobotACC = 100;
+            int RobotAPO = 50;
+            int RobotPTP = 3;
+
+            double RobotVelCp = 0.25;
+            double RobotApocdis = 1.5;
+            double RobotAdvance = 3;
+
+            stringwrite.Add(
+@"&ACCESS RVP
+&REL 1
+&PARAM TEMPLATE = C:\KRC\Roboter\Template\vorgabe
+&PARAM EDITMASK = *
+DEF KUKAProg()
+
+;FOLD INI By Cobra(EasyRobot)
+;FOLD BASISTECH INI
+GLOBAL INTERRUPT DECL 3 WHEN $STOPMESS == TRUE DO IR_STOPM()
+INTERRUPT ON 3
+BAS (#INITMOV,0 )
+;ENDFOLD (BASISTECH INI)
+;ENDFOLD (INI)");
+            stringwrite.Add("");
+            stringwrite.Add(";FOLD STARTPOSITION - BASE IS "+RobotBase+ ", TOOL IS " + RobotTool + ", POSITION IS A1 " + iniA1+ ", A2 " + iniA2 + ", A3 " + iniA3 + ", A4 " + iniA4 + ", A5 " + iniA5 + ", A6 " + iniA6);
+            stringwrite.Add("$BWDSTART = FALSE");
+            stringwrite.Add("PDAT_ACT = {VEL "+RobotVel+ ",ACC " + RobotACC + ",APO_DIST " + RobotAPO + "}");
+            stringwrite.Add("FDAT_ACT = {TOOL_NO " + RobotTool + ",BASE_NO " + RobotBase + ",IPO_FRAME #BASE}");
+            stringwrite.Add("BAS (#PTP_PARAMS," + RobotPTP + ")");
+            stringwrite.Add("PTP  {A1 " + iniA1 + ", A2 " + iniA2 + ", A3 " + iniA3 + ", A4 " + iniA4 + ", A5 " + iniA5 + ", A6 " + iniA6+"}");
+            stringwrite.Add(";ENDFOLD\n");
+
+            stringwrite.Add(";FOLD LIN SPEED IS " + RobotVelCp + " m/sec, INTERPOLATION SETTINGS IN FOLD");
+            stringwrite.Add("$VEL.CP=" + RobotVelCp);
+            stringwrite.Add("$APO.CDIS=" + RobotApocdis);
+            stringwrite.Add("$ADVANCE=" + RobotAdvance);
+            stringwrite.Add(";ENDFOLD\n");
+
+            stringwrite.Add(";FOLD COMMANDS IN FOLD. SELECT EDIT/FOLDS/OPEN ALL FOLDS TO DISPLAY");
+            stringwrite.Add("BAS(#VEL_PTP," + RobotPTP + ")");
 
             List<double[]> AllAxisesD = new List<double[]>();
             for(int i =0; i < AllAxises.Count/6; i++)
@@ -95,6 +142,8 @@ namespace EasyRobot
 
                 
             }
+            stringwrite.Add(";ENDFOLD");
+            stringwrite.Add("END");
 
 
             int simIndex = (int)((AllAxisesD.Count - 1) * SimRatio);
@@ -117,8 +166,8 @@ namespace EasyRobot
 
 
             Point3d a1p1 = new Point3d(0, 0, 0);
-            Point3d a1p2 = new Point3d(0, 0, a2z);
-            Vector3d a1a2 = new Vector3d(a2x, 0, 0);
+            Point3d a1p2 = new Point3d(0, 0, d01);
+            Vector3d a1a2 = new Vector3d(d12, 0, 0);
             Vector3d a1v = new Vector3d(0, 0, 1);
             a1a2.Rotate(UseA1, a1v);
             Axis12Model.Rotate(UseA1, a1v, a1p1);
@@ -238,19 +287,11 @@ namespace EasyRobot
             RobotArms.Add(Axis6Model);
             RobotArms.Add(ToolMeshModel);
 
-
             string[] finalExport = stringwrite.ToArray();
             System.IO.File.WriteAllLines(Path, finalExport);
             DA.SetDataList(0, UseAxises);
             DA.SetData(1, RobotArmLine);
             DA.SetDataList(2, RobotArms);
-
-
-
-
-
-
-
 
         }
 

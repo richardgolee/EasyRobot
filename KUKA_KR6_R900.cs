@@ -41,8 +41,8 @@ namespace EasyRobot
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            double a2z = 400;
-            double a2x = 25;
+            double d01 = 400;
+            double d12 = 25;
             double d23 = 455;
             double d34 = 25;
             double d45 = 420;
@@ -50,8 +50,8 @@ namespace EasyRobot
             List<double> RobotData = new List<double>();
             List<GeometryBase> RobotModel = new List<GeometryBase>();
 
-            RobotData.Add(a2z);
-            RobotData.Add(a2x);
+            RobotData.Add(d01);
+            RobotData.Add(d12);
             RobotData.Add(d23);
             RobotData.Add(d34);
             RobotData.Add(d45);

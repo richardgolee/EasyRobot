@@ -25,9 +25,7 @@ namespace EasyRobot
         {
             pManager.AddPointParameter("TargetPoints", "TPs", "targetpoints", GH_ParamAccess.list);
             pManager.AddNumberParameter("Robot", "Robot", "RobotData", GH_ParamAccess.list);
-            pManager.AddNumberParameter("Tool", "Tool", "ToolData", GH_ParamAccess.list);
-            pManager.AddTextParameter("Path", "Path", "Path", GH_ParamAccess.item);
-            pManager.AddNumberParameter("Simulation", "Sim", "Simulation", GH_ParamAccess.item,0);
+            pManager.AddPointParameter("Tool", "Tool", "ToolPoint", GH_ParamAccess.item);
 
         }
 
@@ -36,9 +34,7 @@ namespace EasyRobot
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddTextParameter("AxisAngles", "AAs", "AxisAngles", GH_ParamAccess.list);
-            pManager.AddGeometryParameter("RobotArmLine", "RAL", "RobotArmLine", GH_ParamAccess.item);
-            pManager.AddGeometryParameter("RobotArmModel", "RAM", "RobotArmModel", GH_ParamAccess.list);
+            pManager.AddNumberParameter("AllAxises", "AllAxises", "AllAxises", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -49,19 +45,14 @@ namespace EasyRobot
         {
             List<Point3d> TarPts = new List<Point3d>();
             List<double> RobotData = new List<double>();
-            List<double> ToolData = new List<double>();
-            List<string> stringwrite = new List<string>();
-            string Path = " ";
-            double sim = 0;
+            Point3d tool = Point3d.Origin;
 
             if (!DA.GetDataList(0, TarPts)) return;
             if (!DA.GetDataList(1, RobotData)) return;
-            if (!DA.GetDataList(2, ToolData)) return;
-            if (!DA.GetData(3, ref Path)) return;
-            if (!DA.GetData(4, ref sim)) return;
+            if (!DA.GetData(2, ref tool)) return;
 
-            double a2z = RobotData[0];
-            double a2x = RobotData[1];
+            double d01 = RobotData[0];
+            double d12 = RobotData[1];
             double d23 = RobotData[2];
             double d34 = RobotData[3];
             double d45 = RobotData[4];
@@ -70,9 +61,9 @@ namespace EasyRobot
             double d35 = Math.Pow(d34 * d34 + d45 * d45, 0.5);
             double da = 180 * Math.Atan(d34 / d45) / Math.PI;
 
-            double Tx = ToolData[0];
-            double Ty = ToolData[1];
-            double Tz = ToolData[2];
+            double Tx = tool.X;
+            double Ty = tool.Y;
+            double Tz = tool.Z;
 
             double Axis1 = 0;
             double Axis2 = 0;
@@ -82,7 +73,8 @@ namespace EasyRobot
             double Axis6 = 0;
 
             List<double[]> AllAxises= new List<double[]>();
-            
+            List<double> AllAxiesFlat = new List<double>();
+
 
 
             for (int i = 0; i < TarPts.Count; i++) {
@@ -91,10 +83,10 @@ namespace EasyRobot
                 double py = pt.Y;
                 double pz = pt.Z;
 
-                double CalHorizontalLength = Math.Pow((px * px + py * py - Ty * Ty), 0.5) - a2x - Tz - d56;
-                Axis1 = (180 * Math.Atan(py / px) / Math.PI) - (180 * Math.Atan(Ty / CalHorizontalLength) / Math.PI);
+                double CalHorizontalLength = Math.Pow((px * px + py * py - Ty * Ty), 0.5) - d12 - Tz - d56;
+                Axis1 = (180 * Math.Atan(py / px) / Math.PI) - (180 * Math.Atan(Ty / (CalHorizontalLength+d12+Tz+d56)) / Math.PI);
 
-                double CalVerticalLength = pz - a2z + Tx;
+                double CalVerticalLength = pz - d01 + Tx;
                 double SumLength = Math.Pow((CalHorizontalLength * CalHorizontalLength + CalVerticalLength * CalVerticalLength), 0.5);
 
                 double cosA2i = (d23 * d23 + SumLength * SumLength - d35 * d35) / (2 * d23 * SumLength);
@@ -137,139 +129,14 @@ namespace EasyRobot
                 Axises[5] = Axis6;
                 AllAxises.Add(Axises);
 
-                string A1 = Axis1.ToString();
-                string A2 = Axis2.ToString();
-                string A3 = Axis3.ToString();
-                string A4 = Axis4.ToString();
-                string A5 = Axis5.ToString();
-                string A6 = Axis6.ToString();
-                string output = "PTP {E6AXIS: A1 "+A1+ ", A2 " + A2 + ", A3 " + A3 + ", A4 " + A4 + ", A5 " + A5 + ", A6 " + A6+"}";
-                stringwrite.Add(output);
+                for (int k = 0; k < 6; k++)
+                {
+                    AllAxiesFlat.Add(Axises[k]);
+                }
+
             }
 
-            int simIndex = (int)((AllAxises.Count-1) * sim);
-            double[] UseAxises = AllAxises[simIndex];
-
-            double UseA1 = UseAxises[0]*Math.PI / 180;
-            double UseA2 = UseAxises[1]*Math.PI / 180;
-            double UseA3 = UseAxises[2]*Math.PI / 180;
-            double UseA4 = UseAxises[3]*Math.PI / 180;
-            double UseA5 = UseAxises[4]*Math.PI / 180;
-            double UseA6 = UseAxises[5]*Math.PI / 180;
-
-            string Axis1ModelString = Properties.Resources.axis1;
-            string Axis12ModelString = Properties.Resources.axis12;
-            string Axis23ModelString = Properties.Resources.axis23;
-            string Axis34ModelString = Properties.Resources.axis34;
-            string Axis45ModelString = Properties.Resources.axis45;
-            string Axis56ModelString = Properties.Resources.axis56;
-            string Axis6ModelString = Properties.Resources.axis6;
-
-            GeometryBase Axis1Model = GH_Convert.ByteArrayToCommonObject<GeometryBase>(System.Convert.FromBase64String(Axis1ModelString));
-            GeometryBase Axis12Model = GH_Convert.ByteArrayToCommonObject<GeometryBase>(System.Convert.FromBase64String(Axis12ModelString));
-            GeometryBase Axis23Model = GH_Convert.ByteArrayToCommonObject<GeometryBase>(System.Convert.FromBase64String(Axis23ModelString));
-            GeometryBase Axis34Model = GH_Convert.ByteArrayToCommonObject<GeometryBase>(System.Convert.FromBase64String(Axis34ModelString));
-            GeometryBase Axis45Model = GH_Convert.ByteArrayToCommonObject<GeometryBase>(System.Convert.FromBase64String(Axis45ModelString));
-            GeometryBase Axis56Model = GH_Convert.ByteArrayToCommonObject<GeometryBase>(System.Convert.FromBase64String(Axis56ModelString));
-            GeometryBase Axis6Model = GH_Convert.ByteArrayToCommonObject<GeometryBase>(System.Convert.FromBase64String(Axis6ModelString));
-
-
-            Point3d a1p1 = new Point3d(0, 0, 0);
-            Point3d a1p2 = new Point3d(0, 0, a2z);
-            Vector3d a1a2 = new Vector3d(a2x, 0, 0);
-            Vector3d a1v = new Vector3d(0, 0, 1);
-            a1a2.Rotate(UseA1, a1v);
-            Axis12Model.Rotate(UseA1, a1v,a1p1);
-            //---------------------------
-            Point3d a2p = Point3d.Add(a1p2, a1a2);
-            Vector3d a2a3 = new Vector3d(d23,0,0);
-            Vector3d a2v = new Vector3d(0, 1, 0);
-            a2v.Rotate(UseA1, a1v);
-            a2a3.Rotate(UseA1, a1v);
-            a2a3.Rotate(UseA2, a2v);
-
-            Vector3d a2pv = new Vector3d(a2p);
-            Axis23Model.Rotate(UseA1, a1v, a1p1);
-            Axis23Model.Rotate(UseA2, a2v, a1p1);
-            Axis23Model.Translate(a2pv);
-            //--------------------------- 
-            Point3d a3p1 = Point3d.Add(a2p, a2a3);
-            Vector3d a3p1p2 = new Vector3d(0, 0, 35);
-            Vector3d a3a5 = new Vector3d(420, 0, 0);
-            a3p1p2.Rotate(UseA1, a1v);
-            a3p1p2.Rotate(UseA2, a2v);
-            a3p1p2.Rotate(UseA3, a2v);
-            a3a5.Rotate(UseA1, a1v);
-            a3a5.Rotate(UseA2, a2v);
-            a3a5.Rotate(UseA3, a2v);
-
-            Vector3d a3p1v = new Vector3d(a3p1);
-            Axis34Model.Rotate(UseA1, a1v,a1p1);
-            Axis34Model.Rotate(UseA2, a2v, a1p1);
-            Axis34Model.Rotate(UseA3, a2v, a1p1);
-            Axis34Model.Translate(a3p1v);
-
-            Axis45Model.Rotate(UseA1, a1v, a1p1);
-            Axis45Model.Rotate(UseA2, a2v, a1p1);
-            Axis45Model.Rotate(UseA3, a2v, a1p1);
-            Axis45Model.Translate(a3p1v);
-            //---------------------------
-            Point3d a3p2 = Point3d.Add(a3p1, a3p1p2);
-            Point3d a5p = Point3d.Add(a3p2, a3a5);
-            Vector3d a5a6 = new Vector3d(d56, 0, 0);
-            a5a6.Rotate(UseA1, a1v);
-            a5a6.Rotate(UseA2, a2v);
-            a5a6.Rotate(UseA3, a2v);
-            a5a6.Rotate(UseA5, a2v);
-            Point3d a6p = Point3d.Add(a5p, a5a6);
-
-            Vector3d a5pv = new Vector3d(a5p);
-            Axis56Model.Rotate(UseA1, a1v, a1p1);
-            Axis56Model.Rotate(UseA2, a2v, a1p1);
-            Axis56Model.Rotate(UseA3, a2v, a1p1);
-            Axis56Model.Rotate(UseA5, a2v, a1p1);
-            Axis56Model.Translate(a5pv);
-
-            Axis6Model.Rotate(UseA1, a1v, a1p1);
-            Axis6Model.Rotate(UseA2, a2v, a1p1);
-            Axis6Model.Rotate(UseA3, a2v, a1p1);
-            Axis6Model.Rotate(UseA5, a2v, a1p1);
-            Axis6Model.Translate(a5pv);
-            //---------------------------
-
-            List<Point3d> AxisesPos = new List<Point3d>();
-            AxisesPos.Add(a1p1);
-            AxisesPos.Add(a1p2);
-            AxisesPos.Add(a2p);
-            AxisesPos.Add(a3p1);
-            AxisesPos.Add(a3p2);
-            AxisesPos.Add(a5p);
-            AxisesPos.Add(a6p);
-
-            Polyline RobotArmLine = new Polyline(AxisesPos);
-
-            List<GeometryBase> RobotArms = new List<GeometryBase>();
-            RobotArms.Add(Axis1Model);
-            RobotArms.Add(Axis12Model);
-            RobotArms.Add(Axis23Model);
-            RobotArms.Add(Axis34Model);
-            RobotArms.Add(Axis45Model);
-            RobotArms.Add(Axis56Model);
-            RobotArms.Add(Axis6Model);
-
-            /*
-            string arm = Properties.Resources.armby;
-            GeometryBase m = GH_Convert.ByteArrayToCommonObject<GeometryBase>(System.Convert.FromBase64String(arm));
-            Vector3d a6v = new Vector3d(a6p);
-            m.Translate(a6v);
-            */
-
-
-            string[] finalExport = stringwrite.ToArray();
-            System.IO.File.WriteAllLines(Path, finalExport);
-            DA.SetDataList(0, UseAxises);
-            DA.SetData(1, RobotArmLine);
-            DA.SetDataList(2, RobotArms);
+            DA.SetDataList(0, AllAxiesFlat);
 
         }
 

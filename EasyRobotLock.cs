@@ -25,7 +25,7 @@ namespace EasyRobot
         {
             pManager.AddPlaneParameter("TargetPlanes", "TPls", "targetPlanes", GH_ParamAccess.list);
             pManager.AddNumberParameter("Robot", "Robot", "RobotData", GH_ParamAccess.list);
-            pManager.AddNumberParameter("Tool", "Tool", "ToolData", GH_ParamAccess.list);
+            pManager.AddPointParameter("Tool", "Tool", "ToolPoint", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -44,12 +44,12 @@ namespace EasyRobot
         {
             List<Plane> TarPls = new List<Plane>();
             List<double> RobotData = new List<double>();
-            List<double> ToolData = new List<double>();
+            Point3d tool = Point3d.Origin;
 
 
             if (!DA.GetDataList(0, TarPls)) return;
             if (!DA.GetDataList(1, RobotData)) return;
-            if (!DA.GetDataList(2, ToolData)) return;
+            if (!DA.GetData(2, ref tool)) return;
 
             double a2z = RobotData[0];
             double a2x = RobotData[1];
@@ -61,9 +61,9 @@ namespace EasyRobot
             double d35 = Math.Pow(d34 * d34 + d45 * d45, 0.5);
             double da = 180*Math.Atan(d34 / d45)/Math.PI;
 
-            double Tx = ToolData[0];
-            double Ty = ToolData[1];
-            double Tz = ToolData[2];
+            double Tx = tool.X;
+            double Ty = 0;
+            double Tz = tool.Z;
 
             double Axis1 = 0;
             double Axis2 = 0;

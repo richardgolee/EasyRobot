@@ -56,12 +56,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EasyRobotComponent.cs" />
     <Compile Include="EasyRobotInfo.cs" />
     <Compile Include="EasyRobotFlat.cs" />
     <Compile Include="EasyRobotConstructor.cs" />
-    <Compile Include="EasyRobotLockTool.cs" />
-    <Compile Include="EasyRobotTool.cs" />
     <Compile Include="EasyRobotLock.cs" />
     <Compile Include="EasyRobotSim.cs" />
     <Compile Include="KUKA_KR6_R900.cs" />
@@ -81,7 +78,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\armby.dat" />
-    <None Include="Resources\cube.3dm" />
     <None Include="Resources\flat.png" />
   </ItemGroup>
   <ItemGroup>

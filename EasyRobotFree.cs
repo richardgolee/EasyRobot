@@ -25,8 +25,6 @@ namespace EasyRobot
         {
             pManager.AddPlaneParameter("TargetPlanes", "TPls", "targetPlanes", GH_ParamAccess.list);
             pManager.AddNumberParameter("Robot", "Robot", "RobotData", GH_ParamAccess.list);
-            //pManager.AddNumberParameter("Tool", "Tool", "ToolData", GH_ParamAccess.list);
-            //pManager.AddTransformParameter("ToolTransformation","trans","ToolTransformation", GH_ParamAccess.item);
             pManager.AddPlaneParameter("ToolPlane", "ToolP", "ToolPlane",GH_ParamAccess.item);
         }
 
@@ -35,11 +33,7 @@ namespace EasyRobot
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            
-            
             pManager.AddNumberParameter("AllAxises", "AllAxises", "AllAxises", GH_ParamAccess.list);
-            //pManager.AddVectorParameter("testOUtput", "testuotput", "tout", GH_ParamAccess.list);
-            //pManager.AddPointParameter("testPoiput", "testPOitput", "toup", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -50,9 +44,6 @@ namespace EasyRobot
         {
             List<Plane> TarPls = new List<Plane>();
             List<double> RobotData = new List<double>();
-            //List<Vector3d> TestData = new List<Vector3d>();
-            //List<Point3d> TestPt = new List<Point3d>();
-            //Transform tool = new Transform();
             Plane tool = Plane.WorldXY;
 
             if (!DA.GetDataList(0, TarPls)) return;
@@ -143,38 +134,16 @@ namespace EasyRobot
                 a4a5.Rotate(Axis2, a2v);
                 a4a5.Rotate(Axis3, a2v);
 
-                Point3d a4p = Point3d.Add(a3p, a3a4);
-                
+                Point3d a4p = Point3d.Add(a3p, a3a4);               
                 Plane a5vPl = new Plane(a4p, a5p, a6p);
                 Vector3d a5v = -a5vPl.Normal;
-
-                Vector3d a5much = Vector3d.Multiply(100, a5v);
-                Point3d a5vpt = Point3d.Add(a5p, a5much);
-                Vector3d a2much = Vector3d.Multiply(100, a2v);
-                Point3d a3vpt = Point3d.Add(a3p, a2much);
-
                 Axis5 = Vector3d.VectorAngle(a5a6, a4a5,a5vPl);
                 
-
                 Vector3d a6vy = robNow.YAxis;
                 Axis6 = Vector3d.VectorAngle(a5v, a6vy,robNow);
 
                 Plane axis4pl = new Plane(a4p, a4a5);
                 Axis4 = Vector3d.VectorAngle(a2v, a5v,axis4pl);
-
-                /*
-                TestData.Add(a2v);
-                TestData.Add(a5v);
-                TestData.Add(a4a5);
-                TestData.Add(a5a6);
-                TestPt.Add(a2p);
-                TestPt.Add(a3p);
-                TestPt.Add(a4p);
-                TestPt.Add(a5p);
-                TestPt.Add(a5vpt);
-                TestPt.Add(a3vpt);
-                TestPt.Add(a6p);
-                */
 
                 Axis1 = Math.Round(Axis1 * 180 / Math.PI, 3);
                 Axis2 = Math.Round(Axis2 * 180 / Math.PI, 3);
@@ -193,18 +162,15 @@ namespace EasyRobot
                      Axis6f = AxisesFormer[5];
                 }
 
-                    if (Axis6 - Axis6f > 180)
-                    {
+                if (Axis6 - Axis6f > 180) {
                         Axis6 = Math.Round(Axis6 - 360,3);
-                    }
-                    if (Axis5 - Axis5f > 180)
-                    {
+                }
+                if (Axis5 - Axis5f > 180){
                         Axis5 = Math.Round(Axis5 - 360, 3);
-                    }
-                    if (Axis4 - Axis4f > 180)
-                    {
+                }
+                if (Axis4 - Axis4f > 180){
                         Axis4 = Math.Round(Axis4 - 360, 3);
-                    }
+                }
 
                 double[] Axises = new double[6];
                 Axises[0] = Axis1;
@@ -214,6 +180,7 @@ namespace EasyRobot
                 Axises[4] = Axis5;
                 Axises[5] = Axis6;
                 AllAxises.Add(Axises);
+
                 for (int k = 0; k < 6; k++)
                 {
                     AllAxiesFlat.Add(Axises[k]);
@@ -222,8 +189,6 @@ namespace EasyRobot
             }
 
             DA.SetDataList(0, AllAxiesFlat);
-            //DA.SetDataList(1, TestData);
-            //DA.SetDataList(2, TestPt);
         }
 
         /// <summary>

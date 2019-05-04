@@ -88,7 +88,7 @@ namespace EasyRobot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to dJoFUBxB1653QxII7u4Owd0JTnCH4Brcg1twd3eX4O4S3CG4uxPcnTvh+7+q/96qO0+dft9zumdmd7aZnqkCBAaBQK/A9k//bbDvgEZZwcTUylrI2tLS2oqGUMXIzt7U2oqXjY6RmY6Rk4GVg46ZnZGGUMjB4oeDnRGvlZHDDzs9CxpCOQd9C1MDSSMXJWtzIyteVlYmJg5GI052A3ZWVlZmhg//zoHydmg6MSNrS6Mfdi500kb2Ju+BOqTjf84CrWdnYGLqaMRsaPnJ2sbIysrBTt/+vaHeD71/g6CgoN79+4CIFCAQD6ArlixhnyAAg/CvcRIDgd49eL0DmYv958s8vr4Dof7PF9uenpMRO5hC6tgBIfqCic9om3A0n4B+5v8Zy1ELfDxsICbxmDPa7nZe/3/aaUUtmslm8fsLFIu7KGfCF4f82GoPLOXfgpU8fTEOCV9A/88W7VzXtef2rhvCo7rL9LVeMOcGLCQLBSEMAv3k/1/R8b/i/6r995cB [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to dJoFUBxB1653QwIEdwguQYO7E9zd3d3dIUBwl+ASnODuEhyCu7tLcNc74fu/qv/eqrtPnX7fPt0zs9vT1T1TtSAwCAR6BT7/9N8H7h1QKCuYmdvYCtpaW9vaUBOqGDs4mtva8LDSMjDRMnDQs7DTMrExUBMKOls5OTsY89gYOzs56FtRE8o5G1iZG0oauyvZWhrb8LCwMDKyMxhzsBmysbCwMNF/+HcN1LdT04oa21obOzm400obO5q9B/JQLv+5Coy+g6GZuYsxk5H1R1s7YxsbZwcDx/dG+k76/zpBQ0O/+/cFkchBIG5AV6yZIz5CAAbxX+EpCgK9e/B9B7IV/c+PeXx9B0L7nx+2PT0nI3owhdyxA0IKABOf0TThaD0B7Wz/05e9Fvh62EBM4jFltt3tvP7/tNOGSiSL1er3V2hmLxGOxK/O+fHV3p+UfwtUcvfFOSd+Bf0/Hwjv6q49z3fd5q/1XbLQEEI5N2DBWLc6ARDoG9//io7/Ff9X7r93 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string axis23 {
             get {
@@ -106,7 +106,7 @@ namespace EasyRobot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to dNoFUBzB1ijg2RBCIEhwD8EJGtwhwd1dg0twdwju7hpcgru7e3AnuENwhzfh/rfqf6/q7Vdnzume7t6ldnt2tgoAAgDAM/j4l/894F+BB0U5YxMLS35Lc3NLC+qPSgY2tiaWFtwstPSMtPTsn5nZaBlZ6ak/8tub2dnbGHBbGNjb2eiYUX+Usdc1M9ETN3BWsPxuYMHNzMzAwEZvwM6qx8rMzMz4Gfrfc6C+LE0rbGBpbmBn40wraWBr/Brsh3H4z7PA6djoGZs4GDDqm8NaWhlYWNjb6Nq+1tex0/k36O3bt6/+vcD35ADABeZlc6ZQWCiwQPp3EBcDgFd3nq8AXrH//DH3z68AtP/5wzanZqWE9yaR27aA9z4Qor80DbgaD+B5mP8Zy9YAvjx8MCbwGdNbbrae/395eWVW4CDDqv031GZwBEfQF8a8vVO799/b4c+6HDzi478A/88D6kaC/1w+pfOrEW2nYMwe/5ByDt8PIIcPALx4/1e0/a/4v/r+ [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to dNoFUBzB1ijg2RBC8OAOwd3dE9zdNbgEh+CS4O7BJcHd3V2DBHcPEtwd3oT736r/vaq3X505p3ume5fsdu9sVQAIAADP4ONf/vdAeAUeVJXMLWxshW2trW1t6N6rmTg4Wtja8HMwMLMyMHMzsXMxsHIy070X/mLl9MXBhN/G5IuTg4EV3XuFL4ZWFkbSJm4qtp9NbPjZ2VlYuJhNuDmNONnZ2VmZoP89B9rL1AziJrbWJk4ObgyyJo7mr8F+GOf/PAucgYORuYWzCauxNaytnYmNzRcHQ8fXxgZOBv8uevv27at/L/AdJQDwgXnZmi0cFgoskP8dZKQA4NWdzyvgg9R//pj751cA+v/8YVtTs3Lie5Mo7X+Ad34QkhP6RjydB/D82/+5lqsRfHkEYEwQsGa03vx5/v/l5ZVZkf1Mu47fUFuhUTwhH1jz9k6d3n3uQDjrdvZOSPgA/D8PqBsZ4XPl1K6frCFdonF7wsPqOUIQiLEQAHwV/F/R/r/i/+r7 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string axis45 {
             get {
@@ -129,16 +129,6 @@ namespace EasyRobot.Properties {
         internal static string axis6 {
             get {
                 return ResourceManager.GetString("axis6", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] cube {
-            get {
-                object obj = ResourceManager.GetObject("cube", resourceCulture);
-                return ((byte[])(obj));
             }
         }
         

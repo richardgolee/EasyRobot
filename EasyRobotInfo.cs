@@ -26,7 +26,7 @@ namespace EasyRobot
             get
             {
                 //Return a short string describing the purpose of this GHA library.
-                return "";
+                return "provide a easy method of robot control and simulation";
             }
         }
         public override Guid Id
@@ -42,7 +42,7 @@ namespace EasyRobot
             get
             {
                 //Return a string identifying you or your company.
-                return "";
+                return "Ce Li";
             }
         }
         public override string AuthorContact
@@ -50,7 +50,7 @@ namespace EasyRobot
             get
             {
                 //Return a string representing your preferred contact details.
-                return "";
+                return "marchlice@outlook.com";
             }
         }
     }
