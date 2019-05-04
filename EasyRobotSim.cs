@@ -149,12 +149,12 @@ BAS (#INITMOV,0 )
             int simIndex = (int)((AllAxisesD.Count - 1) * SimRatio);
             double[] UseAxises = AllAxisesD[simIndex];
 
-            double UseA1 = UseAxises[0] * Math.PI / 180;
+            double UseA1 = -UseAxises[0] * Math.PI / 180;
             double UseA2 = UseAxises[1] * Math.PI / 180;
             double UseA3 = UseAxises[2] * Math.PI / 180;
-            double UseA4 = UseAxises[3] * Math.PI / 180;
+            double UseA4 = -UseAxises[3] * Math.PI / 180;
             double UseA5 = UseAxises[4] * Math.PI / 180;
-            double UseA6 = UseAxises[5] * Math.PI / 180;
+            double UseA6 = -UseAxises[5] * Math.PI / 180;
 
             GeometryBase Axis1Model = RobotModel[0];
             GeometryBase Axis12Model = RobotModel[1];

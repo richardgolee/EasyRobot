@@ -145,12 +145,12 @@ namespace EasyRobot
                 Plane axis4pl = new Plane(a4p, a4a5);
                 Axis4 = Vector3d.VectorAngle(a2v, a5v,axis4pl);
 
-                Axis1 = Math.Round(Axis1 * 180 / Math.PI, 3);
+                Axis1 = -Math.Round(Axis1 * 180 / Math.PI, 3);
                 Axis2 = Math.Round(Axis2 * 180 / Math.PI, 3);
                 Axis3 = Math.Round(Axis3 * 180 / Math.PI, 3);
-                Axis4 = Math.Round(Axis4 * 180 / Math.PI, 3);
+                Axis4 = -Math.Round(Axis4 * 180 / Math.PI, 3);
                 Axis5 = Math.Round(Axis5 * 180 / Math.PI, 3);
-                Axis6 = Math.Round(Axis6 * 180 / Math.PI, 3);
+                Axis6 = -Math.Round(Axis6 * 180 / Math.PI, 3);
 
                 double Axis4f = 0;
                 double Axis5f = 0;
@@ -162,14 +162,14 @@ namespace EasyRobot
                      Axis6f = AxisesFormer[5];
                 }
 
-                if (Axis6 - Axis6f > 180) {
-                        Axis6 = Math.Round(Axis6 - 360,3);
+                if (Axis6 - Axis6f < -180) {
+                        Axis6 = Math.Round(Axis6 + 360,3);
                 }
                 if (Axis5 - Axis5f > 180){
                         Axis5 = Math.Round(Axis5 - 360, 3);
                 }
-                if (Axis4 - Axis4f > 180){
-                        Axis4 = Math.Round(Axis4 - 360, 3);
+                if (Axis4 - Axis4f < -180){
+                        Axis4 = Math.Round(Axis4 + 360, 3);
                 }
 
                 double[] Axises = new double[6];

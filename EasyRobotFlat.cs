@@ -84,7 +84,7 @@ namespace EasyRobot
                 double pz = pt.Z;
 
                 double CalHorizontalLength = Math.Pow((px * px + py * py - Ty * Ty), 0.5) - d12 - Tz - d56;
-                Axis1 = (180 * Math.Atan(py / px) / Math.PI) - (180 * Math.Atan(Ty / (CalHorizontalLength+d12+Tz+d56)) / Math.PI);
+                Axis1 = ((180 * Math.Atan(py / px) / Math.PI) - (180 * Math.Atan(Ty / (CalHorizontalLength+d12+Tz+d56)) / Math.PI));
 
                 double CalVerticalLength = pz - d01 + Tx;
                 double SumLength = Math.Pow((CalHorizontalLength * CalHorizontalLength + CalVerticalLength * CalVerticalLength), 0.5);
@@ -113,7 +113,7 @@ namespace EasyRobot
                 Axis3 = Axis3 + da;
                 Axis5 = Axis5 - da;
 
-                Axis1 = Math.Round(Axis1, 3);
+                Axis1 = -Math.Round(Axis1, 3);
                 Axis2 = Math.Round(Axis2, 3);
                 Axis3 = Math.Round(Axis3, 3);
                 Axis4 = Math.Round(Axis4, 3);

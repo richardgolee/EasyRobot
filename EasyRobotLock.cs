@@ -138,12 +138,12 @@ namespace EasyRobot
                 Axis3 = Axis3 + da;
                 Axis5 = (0-Axis3-Axis2)+(90-a5World);
 
-                Axis1 = Math.Round(Axis1, 3);
+                Axis1 = -Math.Round(Axis1, 3);
                 Axis2 = Math.Round(Axis2, 3);
                 Axis3 = Math.Round(Axis3, 3);
-                Axis4 = Math.Round(Axis4, 3);
+                Axis4 = -Math.Round(Axis4, 3);
                 Axis5 = Math.Round(Axis5, 3);
-                Axis6 = Math.Round(Axis6, 3);
+                Axis6 = -Math.Round(Axis6, 3);
 
                 double[] Axises = new double[6];
                 Axises[0] = Axis1;
